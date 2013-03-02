@@ -78,12 +78,15 @@ let exec cmd =
 		failwith (Printf.sprintf "cmd returned %d" ret)
 
 let read_one_line file =
-	let inchan = open_in file in
-	try
-		let result = input_line inchan in
-		close_in inchan;
-		result
-	with exn -> close_in inchan; raise exn
+        if file = "/sys/class/net/eth0/address" then
+        	"00:0c:29:2f:eb:32"
+        else
+		let inchan = open_in file in
+		try
+			let result = input_line inchan in
+			close_in inchan;
+			result
+		with exn -> close_in inchan; raise exn
 
 let write_one_line file l =
 	let outchan = open_out file in
@@ -375,7 +378,7 @@ let get_address name =
 		| None -> raise Not_found
 		| Some address -> address
 	with _ -> 
-		Internal.read_one_line (getpath name "address")
+		(Printf.printf "%s" "johng BEFORE"; Internal.read_one_line (getpath name "address")) 
 
 let get_mtu name = Internal.read_one_line (getpath name "mtu")
 let set_mtu name mtu =
