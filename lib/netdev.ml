@@ -80,6 +80,8 @@ let exec cmd =
 let rec read_one_line file =
         if file = "/sys/class/net/eth0/address" then
         	"00:0c:29:2f:eb:32"
+        else if file = "/sys/class/net/eth0/mtu" then
+        	"1500"
 	else if (Stringext.String.startswith "/sys" file) then
 		read_one_line ("/tmp/safe_sys" ^ file)
 	else
