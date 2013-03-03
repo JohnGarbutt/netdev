@@ -77,10 +77,12 @@ let exec cmd =
 	if ret <> 0 then
 		failwith (Printf.sprintf "cmd returned %d" ret)
 
-let read_one_line file =
+let rec read_one_line file =
         if file = "/sys/class/net/eth0/address" then
         	"00:0c:29:2f:eb:32"
-        else
+	else if (Stringext.String.startswith "/sys" file) then
+		read_one_line ("/tmp/safe_sys" ^ file)
+	else
 		let inchan = open_in file in
 		try
 			let result = input_line inchan in
